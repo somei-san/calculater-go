@@ -1,7 +1,6 @@
 package formula
 
 import (
-	mathelement "calculater/math_element"
 	"calculater/math_element/number"
 	"calculater/math_element/operator"
 
@@ -18,17 +17,10 @@ func Create(source []string) (instance formula, err error) {
 
 	index := 0
 	for ; index < len(source); index++ {
-		s := source[index]
-		_, ok := mathelement.GetType(source[index])
+		operatorSource := source[index]
+		operator, ok := operator.Create(operatorSource)
 		if !ok {
-			err = errors.New("解釈できない文字が入力されました。" + s)
-			return
-		}
-
-		// ここまできたら演算子しかないはず
-		operator, ok := operator.Create(s)
-		if !ok {
-			err = errors.New("バグ？" + s)
+			err = errors.New("解釈できない文字が入力されました。" + operatorSource)
 			return
 		}
 
@@ -38,8 +30,8 @@ func Create(source []string) (instance formula, err error) {
 			return
 		}
 
-		operatorSource := source[index]
-		num, e := number.Create(operatorSource)
+		numSource := source[index]
+		num, e := number.Create(numSource)
 		if e != nil {
 			err = e
 			return
